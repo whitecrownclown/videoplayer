@@ -3,7 +3,7 @@ import { decorate, observable, computed, action } from "mobx";
 import { observer } from "mobx-react";
 import throttle from 'lodash.throttle';
 import { useClickPreventionOnDoubleClick } from '../hooks';
-import { BUFFERING_LEEWAY } from '../constants';
+import { BUFFERING_LEEWAY, AUTO_HIDE_CONTROLS_TIME } from '../constants';
 import { formatTime } from '../util'
 
 import './style.css';
@@ -32,7 +32,6 @@ class VideoPlayer {
             seconds: true
         };
 
-        this.autoHideControlsTime = 4000;
         this.autoHideControlsTimer = null;
 
         this.onMouseMove = throttle(this.handleControlsAutoHide, 200, { leading: true, trailing: false });
@@ -188,7 +187,7 @@ class VideoPlayer {
             if (!this.videoEl.current.paused) {
                 this.onMouseLeave();
             }
-        }, this.autoHideControlsTime);
+        }, AUTO_HIDE_CONTROLS_TIME);
     }
 
     onClick() {

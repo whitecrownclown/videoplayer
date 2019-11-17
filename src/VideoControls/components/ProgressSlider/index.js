@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { observer } from 'mobx-react';
 
 import { Slider } from '@material-ui/core';
@@ -15,16 +15,16 @@ const useStyles = makeStyles({
 	track: { transition: 'transform .2s linear' }
 });
 
-const Progress = observer(() => {
+const ProgressSlider = observer(() => {
 	const { currentTime, duration, skipTo, timeFormat } = useStore();
 	const classes = useStyles();
 	const sliderRef = useRef(null);
 
-	const handleChange = (e, newValue) => {
+	const handleChange = useCallback((e, newValue) => {
 		skipTo(newValue);
-	};
+	}, [skipTo]);
 
-	const handleMouseMove = (e) => {
+	const handleMouseMove = useCallback((e) => {
 		const { target, clientX } = e;
 		if (!target) return;
 
@@ -37,7 +37,7 @@ const Progress = observer(() => {
 
 		sliderRef.current.style.setProperty('--mouse-position', `${currentWidth}px`);
 		sliderRef.current.setAttribute('data-timestamp', formatTime(Math.floor(time), timeFormat));
-	}
+	}, [duration, timeFormat]);
 
 	return (
 		<Slider
@@ -54,4 +54,4 @@ const Progress = observer(() => {
 	);
 });
 
-export default Progress;
+export default ProgressSlider;
