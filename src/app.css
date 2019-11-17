@@ -12,39 +12,10 @@ body {
 }
 
 .material-icons:not(:disabled) {
-    cursor: pointer
+    cursor: pointer;
 }
 
-@-webkit-keyframes actionKeyframes {
-    from {
-        opacity: .6;
-        transform: scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: scale(3);
-    }
-};
-
-@keyframes actionKeyframes {
-    from {
-        opacity: .6;
-        transform: scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: scale(3);
-    }
-};
-
-/* .animate-action { */
-    /* opacity: 0;
-    transform: scale(1);
-    animation-name: actionKeyframes;
-    animation-duration: 1s;
-    display: none !important;
-} */
-
-.animateAction {
-    display: none !important;
+#root, .App {
+    width: 100%;
+    height: 100%;
 }

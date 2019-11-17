@@ -115,6 +115,7 @@ class VideoPlayer {
         videoElement.removeEventListener('ended', this.handleEnded);
         // videoElement.removeEventListener('progress', this.handleProgress);
 
+        videoElement.removeEventListener('keypress', this.handleKeyboardShortcuts);
         videoElement.parentNode.removeEventListener('fullscreenchange', this.setIsFullscreen);
     }
 

@@ -1,4 +1,4 @@
-## Video Player
+# Video Player
 
 Video Player written with React, MobX and MaterialUI 
 
@@ -25,3 +25,5 @@ Video Player written with React, MobX and MaterialUI
 
 ### Start
 > npm start
+
+Now you can open up http://localhost:3000 and check it out!
