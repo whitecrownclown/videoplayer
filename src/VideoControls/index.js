@@ -3,6 +3,8 @@ import { observer } from 'mobx-react';
 import cx from 'classnames';
 import './style.css';
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import { Icon, Grid, Popover, MenuItem, InputLabel, Select } from '@material-ui/core';
 import { Pause, PlayArrow, Fullscreen, FullscreenExit, Settings } from '@material-ui/icons';
 import { useStore } from '../store';
@@ -11,10 +13,21 @@ import VolumeControls from './components/VolumeControls';
 import TimeDisplay from './components/TimeDisplay';
 import Progress from './components/Progress';
 
+const usePopoverStyles = makeStyles({
+	paper: { padding: 6 },
+});
+
+const useSelectStyles = makeStyles({
+	root: { width: '100%' },
+	select: { width: 'inherit' }
+});
+
 const VideoControls = observer(props => {
 	const { showControls, isPlaying, isFullscreen, onClick, toggleFullscreen } = useStore();
 	const anchorEl = useRef(null);
-	const [open, setOpen] = useState(false)
+	const [open, setOpen] = useState(false);
+	const popoverClasses = usePopoverStyles();
+	const selectClasses = useSelectStyles();
 
 	return (
 		<div className={cx('video-controls', { show: showControls })} {...props}>
@@ -36,10 +49,18 @@ const VideoControls = observer(props => {
 					<VolumeControls />
 					<TimeDisplay />
 					<Grid item className="right-side-icons">
-						<Icon ref={anchorEl} component={Settings} fontSize={'small'} onClick={() => {
-							setOpen(!open);
-						}} />
+						<Icon
+							id="settings-icon"
+							ref={anchorEl}
+							component={Settings}
+							fontSize={'small'}
+							className={cx({ open })}
+							onClick={() => {
+								setOpen(!open);
+							}}
+						/>
 						<Popover
+							classes={popoverClasses}
 							open={open}
 							anchorEl={anchorEl.current}
 							anchorOrigin={{
@@ -54,8 +75,8 @@ const VideoControls = observer(props => {
 								setOpen(false)
 							}}
 						>
-							<InputLabel id="label">Playback speed</InputLabel>
-							<Select labelId="label" id="select" defaultValue="1">
+							<InputLabel classes={selectClasses} id="label">Playback speed</InputLabel>
+							<Select classes={selectClasses} labelId="label" id="select" defaultValue="1">
 								<MenuItem value="1">1x</MenuItem>
 								<MenuItem value="2">2x</MenuItem>
 							</Select>
