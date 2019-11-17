@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { observer, } from 'mobx-react';
 import cx from 'classnames';
-import { Icon, Slider, Grid } from '@material-ui/core';
+import { Icon, Slider, Grid, Tooltip } from '@material-ui/core';
 import { VolumeUp, VolumeDown, VolumeMute } from '@material-ui/icons';
 import './style.css';
 
@@ -41,7 +41,9 @@ const VolumeControls = observer(() => {
 				setIsOpen(false);
 			}}
 		>
-			<Icon component={getVolumeIcon(volume, muted)} onClick={() => setMuted(!muted)} />
+			<Tooltip title="Mute (m)" placement="top">
+				<Icon component={getVolumeIcon(volume, muted)} onClick={() => setMuted(!muted)} />
+			</Tooltip>
 			<div className={cx('volume-slider', { open: isOpen })}>
 				<Slider min={0} max={100} value={muted ? 0 : volumeValue} onChange={handleChange} />
 			</div>

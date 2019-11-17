@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { observer } from 'mobx-react';
 
-import { Slider, Popper } from '@material-ui/core';
+import { Slider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useStore } from '../../../store';
 
@@ -16,12 +16,12 @@ const useStyles = makeStyles({
 });
 
 const Progress = observer(() => {
-	const { currentTime, duration, jumpInTime, timeFormat } = useStore();
+	const { currentTime, duration, skipTo, timeFormat } = useStore();
 	const classes = useStyles();
 	const sliderRef = useRef(null);
 
 	const handleChange = (e, newValue) => {
-		jumpInTime(newValue);
+		skipTo(newValue);
 	};
 
 	const handleMouseMove = (e) => {
@@ -36,7 +36,7 @@ const Progress = observer(() => {
 		const time = currentWidth * totalTime / totalWidth;
 
 		sliderRef.current.style.setProperty('--mouse-position', `${currentWidth}px`);
-		sliderRef.current.setAttribute('data-position', formatTime(Math.floor(time), timeFormat));
+		sliderRef.current.setAttribute('data-timestamp', formatTime(Math.floor(time), timeFormat));
 	}
 
 	return (

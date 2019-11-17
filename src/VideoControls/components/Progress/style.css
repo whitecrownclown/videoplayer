@@ -17,7 +17,7 @@
 }
 
 .video-progress:hover::before {
-    content: attr(data-position);
+    content: attr(data-timestamp);
     left: var(--mouse-position);
 
     position: absolute;

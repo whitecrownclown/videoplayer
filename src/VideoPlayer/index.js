@@ -24,6 +24,7 @@ class VideoPlayer {
         this.currentTime = 0;
         this.buffering = false;
         this.loadProgress = 0;
+        this.playbackRate = 1;
 
         this.timeFormat = {
             hours: true,
@@ -51,7 +52,7 @@ class VideoPlayer {
         this.duration = duration;
     }
 
-    jumpInTime(value) {
+    skipTo(value) {
         this.currentTime = value;
         this.videoEl.current.currentTime = value;
     }
@@ -61,8 +62,19 @@ class VideoPlayer {
     };
 
     setPlaying = () => {
+        if (this.ended) {
+            this.ended = false;
+
+            this.skipTo(0);
+        }
+
         this.isPaused = false;
         this.isPlaying = true;
+    }
+
+    setPlaybackRate = (value) => {
+        this.playbackRate = value;
+        this.videoEl.current.playbackRate = value;
     }
 
     setPause = () => {
@@ -87,6 +99,7 @@ class VideoPlayer {
         videoElement.addEventListener('ended', this.handleEnded);
         // videoElement.addEventListener('progress', this.handleProgress);
 
+        videoElement.addEventListener('keypress', this.handleKeyboardShortcuts);
         videoElement.parentNode.addEventListener('fullscreenchange', this.setIsFullscreen);
     }
 
@@ -103,6 +116,18 @@ class VideoPlayer {
         // videoElement.removeEventListener('progress', this.handleProgress);
 
         videoElement.parentNode.removeEventListener('fullscreenchange', this.setIsFullscreen);
+    }
+
+    handleKeyboardShortcuts = (e) => {
+        const keyName = e.key.toLowerCase();
+
+        if (keyName === 'f') {
+            this.toggleFullscreen();
+        } else if (keyName === 'm') {
+            this.setMuted(!this.muted);
+        } else if ([' ', 'spacebar', 'k'].includes(e.key)) {
+            this.onClick();
+        }
     }
 
     handleProgress = () => {
@@ -123,7 +148,7 @@ class VideoPlayer {
     };
 
     handleEnded = () => {
-        // Add restart button?
+        this.ended = true;
     };
 
     handleStartBuffering = () => {
@@ -211,6 +236,7 @@ decorate(VideoPlayer, {
     duration: observable,
     currentTime: observable,
     isFullscreen: observable,
+    ended: observable,
     muted: observable,
     volume: observable,
     buffering: observable,
@@ -227,7 +253,7 @@ decorate(VideoPlayer, {
     setMuted: action.bound,
     setVolume: action.bound,
     getVolume: action.bound,
-    jumpInTime: action.bound,
+    skipTo: action.bound,
     toggleFullscreen: action.bound
 });
 
@@ -248,7 +274,14 @@ const VideoPlayerView = observer((props) => {
             cursor: showControls ? 'default' : 'none'
         }} {...{ onMouseLeave, onMouseMove }}>
             <VideoOverlay />
-            <video ref={videoEl} playsInline onClick={handleClick} onDoubleClick={handleDoubleClick} {...{ onMouseEnter, onMouseOver }} {...props} />
+            <video
+                ref={videoEl}
+                playsInline
+                onClick={handleClick}
+                onDoubleClick={handleDoubleClick}
+                {...{ onMouseEnter, onMouseOver }}
+                {...props}
+            />
             <VideoControls />
         </div >
     );
