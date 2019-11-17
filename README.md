@@ -15,9 +15,9 @@ Video Player written with React, MobX and MaterialUI
 - Progress Bar with timestamp
 - Sound Button with Slider
 - Fullscreen Button
-- Playback Speed Control
+- Playback Rate Control
 - Keyboard Shortcuts
-- Play/Pause Animations
+- Buffering/Play/Pause Status Animations
 
 ### Install
 

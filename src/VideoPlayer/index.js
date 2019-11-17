@@ -97,8 +97,6 @@ class VideoPlayer {
         videoElement.addEventListener('waiting', this.handleStartBuffering);
         videoElement.addEventListener('playing', this.handleStopBuffering);
         videoElement.addEventListener('ended', this.handleEnded);
-        // videoElement.addEventListener('progress', this.handleProgress);
-
         videoElement.addEventListener('keypress', this.handleKeyboardShortcuts);
         videoElement.parentNode.addEventListener('fullscreenchange', this.setIsFullscreen);
     }
@@ -113,8 +111,6 @@ class VideoPlayer {
         videoElement.removeEventListener('waiting', this.handleStartBuffering);
         videoElement.removeEventListener('playing', this.handleStopBuffering);
         videoElement.removeEventListener('ended', this.handleEnded);
-        // videoElement.removeEventListener('progress', this.handleProgress);
-
         videoElement.removeEventListener('keypress', this.handleKeyboardShortcuts);
         videoElement.parentNode.removeEventListener('fullscreenchange', this.setIsFullscreen);
     }
