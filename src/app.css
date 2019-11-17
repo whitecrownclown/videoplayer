@@ -1,0 +1,50 @@
+body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.material-icons:not(:disabled) {
+    cursor: pointer
+}
+
+@-webkit-keyframes actionKeyframes {
+    from {
+        opacity: .6;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(3);
+    }
+};
+
+@keyframes actionKeyframes {
+    from {
+        opacity: .6;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(3);
+    }
+};
+
+/* .animate-action { */
+    /* opacity: 0;
+    transform: scale(1);
+    animation-name: actionKeyframes;
+    animation-duration: 1s;
+    display: none !important;
+} */
+
+.animateAction {
+    display: none !important;
+}

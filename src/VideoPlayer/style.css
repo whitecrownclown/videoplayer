@@ -1,0 +1,15 @@
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.video-wrapper {
+    position: relative;
+    display: flex;
+}
+
+video {
+    object-fit: inherit;
+    width: 100%;
+}

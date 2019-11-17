@@ -1,0 +1,10 @@
+.time-display {
+    font-size: 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.time-display span {
+    vertical-align: middle;
+}

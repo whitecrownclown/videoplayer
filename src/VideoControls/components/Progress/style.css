@@ -1,0 +1,17 @@
+.video-progress:hover .MuiSlider-rail, .video-progress:hover .MuiSlider-track { 
+    transform: scaleY(2);
+}
+
+.video-progress:hover .MuiSlider-thumb {
+    height: 12px;
+    margin-top: -5px;
+    transform: scale(1.2);
+}
+
+.MuiSlider-thumb:after {
+    content: none !important;
+}
+
+.video-progress .MuiSlider-thumb.Mui-focusVisible, .video-progress .MuiSlider-thumb:hover, .video-progress .MuiSlider-thumb.MuiSlider-active {
+    box-shadow: none;
+}
