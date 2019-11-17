@@ -13,30 +13,31 @@ import VolumeControls from './components/VolumeControls';
 import TimeDisplay from './components/TimeDisplay';
 import Progress from './components/Progress';
 
+import { PLAYBACK_RATES } from '../constants';
+
 const usePopoverStyles = makeStyles({
 	root: { color: '#fff' },
-	paper: { padding: 6, background: 'rgba(0, 0, 0, 0.7)', },
+	paper: { padding: 6, background: 'rgba(97, 97, 97, 0.9)' }
 });
 
+const useMenuStyles = makeStyles({
+	paper: { padding: 4, background: 'rgba(97, 97, 97, 0.9)' },
+	list: { color: '#fff' }
+})
+
 const useSelectStyles = makeStyles({
-	root: { width: '100%', color: '#fff' },
+	root: { width: '100% !important', color: '#fff' },
 	select: { width: 'inherit' }
 });
 
-const useInputClasses = makeStyles({
-	root: {
-		width: '100%', color: '#fff', fontSize: 12
-	}
-})
-
 const VideoControls = observer(props => {
-	const { showControls, isPlaying, isFullscreen, onClick, toggleFullscreen, ended } = useStore();
+	const { showControls, isPlaying, isFullscreen, onClick, toggleFullscreen, ended, playbackRate, setPlaybackRate } = useStore();
 	const anchorEl = useRef(null);
 	const [open, setOpen] = useState(false);
 
 	const popoverClasses = usePopoverStyles();
 	const selectClasses = useSelectStyles();
-	const inputClasses = useInputClasses();
+	const menuClasses = useMenuStyles();
 
 	return (
 		<div className={cx('video-controls', { show: showControls })} {...props}>
@@ -60,7 +61,10 @@ const VideoControls = observer(props => {
 					<VolumeControls />
 					<TimeDisplay />
 					<Grid item className="right-side-icons">
-						<Tooltip title="Settings" placement="top">
+						<Tooltip
+							placement="top"
+							title="Playback rate"
+						>
 							<Icon
 								id="settings-icon"
 								ref={anchorEl}
@@ -87,13 +91,26 @@ const VideoControls = observer(props => {
 								setOpen(false)
 							}}
 						>
-							<InputLabel classes={inputClasses} id="label">Playback speed</InputLabel>
-							<Select classes={selectClasses} labelId="label" id="select" defaultValue="1">
-								<MenuItem value="1">1x</MenuItem>
-								<MenuItem value="2">2x</MenuItem>
+							<Select
+								onChange={(e) => { setPlaybackRate(e.target.value); }}
+								onClose={() => setOpen(false)}
+								autoWidth={true}
+								classes={selectClasses}
+								labelId="label"
+								id="select"
+								defaultValue={playbackRate}
+								MenuProps={{
+									classes: menuClasses
+								}}
+								style={{
+									margin: '0 auto'
+								}}
+							>
+								{PLAYBACK_RATES.map((rate) =>
+									<MenuItem key={rate} value={rate}>{rate}</MenuItem>
+								)}
 							</Select>
 						</Popover>
-
 					</Grid>
 					<Grid item>
 						<Tooltip title="Full screen (f)" placement="top">
