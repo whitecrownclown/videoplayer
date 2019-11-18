@@ -36,7 +36,7 @@ const ProgressSlider = observer(() => {
 		const time = currentWidth * totalTime / totalWidth;
 
 		sliderRef.current.style.setProperty('--mouse-position', `${currentWidth}px`);
-		sliderRef.current.setAttribute('data-timestamp', formatTime(Math.floor(time), timeFormat));
+		sliderRef.current.setAttribute('data-timestamp', duration ? formatTime(Math.floor(time), timeFormat) : '00:00');
 	}, [duration, timeFormat]);
 
 	return (
