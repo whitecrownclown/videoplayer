@@ -24,7 +24,7 @@ const useSelectStyles = makeStyles({
 });
 
 const Right = observer(() => {
-    const { isFullscreen, toggleFullscreen, playbackRate, setPlaybackRate } = useStore();
+    const { isFullscreen, videoEl, toggleFullscreen, playbackRate, setPlaybackRate } = useStore();
     const anchorEl = useRef(null);
     const [open, setOpen] = useState(false);
 
@@ -50,6 +50,7 @@ const Right = observer(() => {
                     />
                 </Tooltip>
                 <Popover
+                    container={isFullscreen ? videoEl.current.parentNode : document.body}
                     classes={popoverClasses}
                     open={open}
                     anchorEl={anchorEl.current}
@@ -74,7 +75,8 @@ const Right = observer(() => {
                         id="select"
                         defaultValue={playbackRate}
                         MenuProps={{
-                            classes: menuClasses
+                            classes: menuClasses,
+                            container: isFullscreen ? videoEl.current.parentNode : document.body
                         }}
                     >
                         {PLAYBACK_RATES.map((rate) =>

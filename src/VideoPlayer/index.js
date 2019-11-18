@@ -116,7 +116,7 @@ class VideoPlayer {
 
     handleKeyboardShortcuts = (e) => {
         const keyName = e.key.toLowerCase();
-
+        console.log({keyName})
         if (keyName === 'f') {
             this.toggleFullscreen();
         } else if (keyName === 'm') {
