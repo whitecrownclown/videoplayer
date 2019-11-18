@@ -7,13 +7,13 @@ import { formatTime } from '../../../util';
 import './style.css';
 
 const TimeDisplay = observer(() => {
-	const { currentTime, timeFormat, formattedDuration } = useStore();
+	const { currentTime, timeFormat, duration, formattedDuration } = useStore();
 
-	return (
+	return duration ? (
 		<Grid item className="time-display">
 			<span>{`${formatTime(currentTime, timeFormat)} / ${formattedDuration}`}</span>
 		</Grid>
-	);
+		) : null;
 });
 
 export default TimeDisplay;
