@@ -1,6 +1,6 @@
 {
   "name": "videoplayer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.7.0",
