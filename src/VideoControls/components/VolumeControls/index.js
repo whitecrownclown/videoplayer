@@ -47,13 +47,23 @@ const VolumeControls = observer(() => {
 		}
 	}, [isMouseDown]);
 
+	const handleOnMouseUp = useCallback(() => {
+		setMouseDown(false);
+	}, []);
+
+	const handleOnVolumeIconClick = useCallback(() => {
+		setMuted(!muted); setMouseDown(false);
+	}, [muted, setMuted]);
+
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClick);
+		document.addEventListener('mouseup', handleOnMouseUp);
 
 		return () => {
 			document.removeEventListener('mousedown', handleClick);
+			document.removeEventListener('mouseup', handleOnMouseUp);
 		}
-	}, [handleClick]);
+	}, [handleClick, handleOnMouseUp]);
 
 	return (
 		<Grid
@@ -65,9 +75,9 @@ const VolumeControls = observer(() => {
 			onMouseLeave={handleOnMouseLeave}
 		>
 			<Tooltip title="Mute (m)" placement="top">
-				<Icon component={getVolumeIcon(volume, muted)} onClick={() => setMuted(!muted)} />
+				<Icon component={getVolumeIcon(volume, muted)} onClick={handleOnVolumeIconClick} />
 			</Tooltip>
-			<div className={cx('volume-slider', { open: isOpen })} onMouseDown={() => setMouseDown(true)} onMouseUp={() => setMouseDown(false)}>
+			<div className={cx('volume-slider', { open: isOpen })} onMouseDown={() => setMouseDown(true)} onMouseUp={handleOnMouseUp}>
 				<Slider min={0} max={100} value={muted ? 0 : volumeValue} onChange={handleChange} />
 			</div>
 		</Grid>

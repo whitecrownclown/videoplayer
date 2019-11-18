@@ -10,7 +10,7 @@
     background: linear-gradient(0deg,
     rgba(0,0,0,.8) 0,rgba(0,0,0,.35) 60%,transparent);
 
-    pointer-events: none;    
+    pointer-events: none;
     color: #fff;
 }
 
@@ -24,7 +24,7 @@
     bottom: 0;
     left: 0;
     position: absolute;
-    padding: 4px 10px;
+    padding: 4px 12px;
 }
 
 .bottom-section .MuiGrid-item {
