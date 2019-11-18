@@ -25,6 +25,7 @@ class VideoPlayer {
         this.buffering = false;
         this.loadProgress = 0;
         this.playbackRate = 1;
+        this.buffered = 0;
 
         this.timeFormat = {
             hours: true,
@@ -96,6 +97,7 @@ class VideoPlayer {
         videoElement.addEventListener('waiting', this.handleStartBuffering);
         videoElement.addEventListener('playing', this.handleStopBuffering);
         videoElement.addEventListener('ended', this.handleEnded);
+        videoElement.addEventListener('progress', this.handleProgress);
         videoElement.parentNode.addEventListener('keydown', this.handleKeyboardShortcuts);
         videoElement.parentNode.addEventListener('fullscreenchange', this.setIsFullscreen);
     }
@@ -110,6 +112,7 @@ class VideoPlayer {
         videoElement.removeEventListener('waiting', this.handleStartBuffering);
         videoElement.removeEventListener('playing', this.handleStopBuffering);
         videoElement.removeEventListener('ended', this.handleEnded);
+        videoElement.removeEventListener('progress', this.handleProgress);
         videoElement.parentNode.removeEventListener('keydown', this.handleKeyboardShortcuts);
         videoElement.parentNode.removeEventListener('fullscreenchange', this.setIsFullscreen);
     }
@@ -126,22 +129,18 @@ class VideoPlayer {
         }
     }
 
-    handleProgress = () => {
-        const { current: videoElement } = this.videoEl;
-        let range = 0;
-        const buffer = videoElement.buffered;
-        const currentTime = videoElement.currentTime;
+    handleProgress = (e) => {
+        const videoElement = e.target;
 
-        while (!(buffer.start(range) <= currentTime && currentTime <= buffer.end(range))) {
-            range += 1;
+        if (videoElement.duration > 0) {
+          for (let i = 0; i < videoElement.buffered.length; i++) {
+                if (videoElement.buffered.start(videoElement.buffered.length - 1 - i) < videoElement.currentTime) {
+                    this.buffered = (videoElement.buffered.end(videoElement.buffered.length - 1 - i) / videoElement.duration) * 100
+                    break;
+                }
+            }
         }
-
-        const loadStartPercentage = buffer.start(range) / videoElement.duration;
-        const loadEndPercentage = buffer.end(range) / videoElement.duration;
-        const loadPercentage = loadEndPercentage - loadStartPercentage;
-
-        this.loadProgress = loadPercentage;
-    };
+      };
 
     handleEnded = () => {
         this.ended = true;
@@ -235,6 +234,7 @@ decorate(VideoPlayer, {
     ended: observable,
     muted: observable,
     volume: observable,
+    buffered: observable,
     buffering: observable,
     showControls: observable,
     isPlaying: observable,

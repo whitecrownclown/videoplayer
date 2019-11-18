@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from 'react';
+import {autorun} from 'mobx';
 import { observer } from 'mobx-react';
 
 import { Slider } from '@material-ui/core';
@@ -10,13 +11,13 @@ import { formatTime } from '../../../util'
 
 const useStyles = makeStyles({
 	root: { padding: '6px 0' },
-	rail: { backgroundColor: '#FFF', transition: 'transform .2s linear' },
+	rail: { backgroundColor: '#FFF', transition: 'transform .2s linear', opacity: 0.2 },
 	thumb: { height: '2px', marginTop: 0, transition: 'transform .2s linear', pointerEvents: 'none' },
 	track: { transition: 'transform .2s linear' }
 });
 
 const ProgressSlider = observer(() => {
-	const { currentTime, duration, skipTo, timeFormat } = useStore();
+	const { currentTime, duration, skipTo, timeFormat, buffered } = useStore();
 	const classes = useStyles();
 	const sliderRef = useRef(null);
 
@@ -38,6 +39,11 @@ const ProgressSlider = observer(() => {
 		sliderRef.current.style.setProperty('--mouse-position', `${currentWidth}px`);
 		sliderRef.current.setAttribute('data-timestamp', duration ? formatTime(Math.floor(time), timeFormat) : '00:00');
 	}, [duration, timeFormat]);
+
+	autorun(() => {
+		if (!sliderRef.current) return;
+		sliderRef.current.style.setProperty('--buffered', `${buffered}%`);
+	});
 
 	return (
 		<Slider
