@@ -1,4 +1,4 @@
-.video-progress:hover .MuiSlider-rail, .video-progress:hover .MuiSlider-track { 
+.video-progress:hover .MuiSlider-rail, .video-progress:hover .MuiSlider-track {
     transform: scaleY(2);
 }
 
@@ -27,5 +27,5 @@
 
     color: #fff;
     background: rgba(97, 97, 97, 0.9);
-    border-radius: 4px;    
+    border-radius: 4px;
 }
