@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { observer, } from 'mobx-react';
 import cx from 'classnames';
 import { Icon, Slider, Grid, Tooltip } from '@material-ui/core';
@@ -22,8 +22,10 @@ function getVolumeIcon(volume, muted) {
 const VolumeControls = observer(() => {
 	const { volume, setVolume, muted, setMuted } = useStore();
 
+	const anchorRef = useRef(null);
 	const [volumeValue, setVolumeValue] = useState(volume);
 	const [isOpen, setIsOpen] = useState(false);
+	const [isMouseDown, setMouseDown] = useState(false);
 
 	const handleChange = useCallback((e, newValue) => {
 		if (Number.isNaN(newValue)) return;
@@ -31,20 +33,41 @@ const VolumeControls = observer(() => {
 		setVolume(newValue / 100);
 	}, [setVolume]);
 
+	const handleClick = useCallback((e) => {
+		if (anchorRef.current.contains(e.target)) {
+			return;
+		}
+
+		setIsOpen(false);
+	}, []);
+
+	const handleOnMouseLeave = useCallback(() => {
+		if (!isMouseDown) {
+			setIsOpen(false);
+		}
+	}, [isMouseDown]);
+
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClick);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+		}
+	}, [handleClick]);
+
 	return (
 		<Grid
+			ref={anchorRef}
 			item
 			onMouseEnter={() => {
 				setIsOpen(true);
 			}}
-			onMouseLeave={() => {
-				setIsOpen(false);
-			}}
+			onMouseLeave={handleOnMouseLeave}
 		>
 			<Tooltip title="Mute (m)" placement="top">
 				<Icon component={getVolumeIcon(volume, muted)} onClick={() => setMuted(!muted)} />
 			</Tooltip>
-			<div className={cx('volume-slider', { open: isOpen })}>
+			<div className={cx('volume-slider', { open: isOpen })} onMouseDown={() => setMouseDown(true)} onMouseUp={() => setMouseDown(false)}>
 				<Slider min={0} max={100} value={muted ? 0 : volumeValue} onChange={handleChange} />
 			</div>
 		</Grid>
