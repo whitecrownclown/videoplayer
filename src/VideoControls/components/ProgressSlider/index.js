@@ -31,7 +31,7 @@ const ProgressSlider = observer(() => {
 		const rect = target.getBoundingClientRect();
 
 		const totalWidth = target.offsetWidth;
-		const currentWidth = clientX - rect.left;
+		const currentWidth = Math.max(clientX - rect.left, 0);
 		const totalTime = duration;
 		const time = currentWidth * totalTime / totalWidth;
 
