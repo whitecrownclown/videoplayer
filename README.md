@@ -1,6 +1,6 @@
 # Video Player
 
-Video Player written with React, MobX and MaterialUI 
+Video Player written with React, MobX and MaterialUI
 
 ## Tech Used
 
@@ -18,6 +18,7 @@ Video Player written with React, MobX and MaterialUI
 - Playback Rate Control
 - Keyboard Shortcuts
 - Buffering/Play/Pause Status Animations
+- Buffered Progress
 
 ### Install
 
