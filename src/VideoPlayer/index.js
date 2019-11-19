@@ -1,5 +1,5 @@
 import React, { createRef, useEffect } from 'react';
-import { decorate, observable, computed, action } from "mobx";
+import { observable, computed, action } from "mobx";
 import { observer } from "mobx-react";
 import throttle from 'lodash.throttle';
 import { useClickPreventionOnDoubleClick } from '../hooks';
@@ -13,31 +13,26 @@ import VideoControls from '../VideoControls';
 import VideoOverlay from '../VideoOverlay';
 
 class VideoPlayer {
-    constructor() {
-        this.videoEl = createRef(null);
-        this.showControls = false;
-        this.isPlaying = false;
-        this.isFullscreen = false;
-        this.muted = false;
-        this.volume = 100;
-        this.duration = null;
-        this.currentTime = 0;
-        this.buffering = false;
-        this.loadProgress = 0;
-        this.playbackRate = 1;
-        this.buffered = 0;
+    @observable videoEl = createRef(null);
+    @observable showControls = false;
+    @observable isPlaying = false;
+    @observable isFullscreen = false;
+    @observable muted = false;
+    @observable volume = 100;
+    @observable duration = null;
+    @observable currentTime = 0;
+    @observable buffering = false;
+    @observable loadProgress = 0;
+    @observable playbackRate = 1;
+    @observable buffered = 0;
+    @observable timeFormat = {
+        hours: true,
+        minutes: true,
+        seconds: true
+    };
+    autoHideControlsTimer = null;
 
-        this.timeFormat = {
-            hours: true,
-            minutes: true,
-            seconds: true
-        };
-
-        this.autoHideControlsTimer = null;
-
-        this.onMouseMove = throttle(this.handleControlsAutoHide, 200, { leading: true, trailing: false });
-    }
-
+    @computed
     get formattedDuration() {
         return formatTime(this.duration, this.timeFormat);
     }
@@ -52,7 +47,8 @@ class VideoPlayer {
         this.duration = duration;
     }
 
-    skipTo(value) {
+    @action
+    skipTo = (value) => {
         this.currentTime = value;
         this.videoEl.current.currentTime = value;
     }
@@ -72,6 +68,7 @@ class VideoPlayer {
         this.isPlaying = true;
     }
 
+    @action
     setPlaybackRate = (value) => {
         this.playbackRate = value;
         this.videoEl.current.playbackRate = value;
@@ -82,7 +79,8 @@ class VideoPlayer {
         this.isPlaying = false;
     }
 
-    setMuted(value) {
+    @action
+    setMuted = (value) => {
         this.videoEl.current.muted = value;
     }
 
@@ -158,6 +156,7 @@ class VideoPlayer {
         this.buffering = false;
     };
 
+    @action
     handleVolumeChange = throttle((e) => {
         this.volume = e.target.volume;
         this.muted = e.target.muted;
@@ -169,16 +168,18 @@ class VideoPlayer {
         return this.currentTime;
     }, 200, { leading: true });
 
-    pause() {
+    pause = () => {
         this.videoEl.current.pause();
     }
 
-    setVolume(value) {
+    @action
+    setVolume = (value) => {
         this.videoEl.current.volume = value;
         this.setMuted(value === 0);
     }
 
-    handleControlsAutoHide() {
+    @action
+    handleControlsAutoHide = () => {
         clearTimeout(this.autoHideControlsTimer);
 
         this.showControls = true;
@@ -189,7 +190,10 @@ class VideoPlayer {
         }, AUTO_HIDE_CONTROLS_TIME);
     }
 
-    onClick() {
+    onMouseMove = throttle(this.handleControlsAutoHide, 200, { leading: true, trailing: false });
+
+    @action
+    onClick= () => {
         this.handleControlsAutoHide();
 
         if (this.videoEl.current.paused) {
@@ -199,9 +203,11 @@ class VideoPlayer {
         }
     }
 
-    onDoubleClick = this.toggleFullscreen;
+    @action
+    onDoubleClick = () => this.toggleFullscreen();
 
-    toggleFullscreen() {
+    @action
+    toggleFullscreen = () => {
         if (document.fullscreenElement === this.videoEl.current.parentNode) {
             document.exitFullscreen();
         } else {
@@ -209,49 +215,24 @@ class VideoPlayer {
         }
     }
 
-    onMouseEnter() {
+    @action
+    onMouseEnter = () => {
         this.handleControlsAutoHide();
     }
 
-    onMouseOver() {
+    @action
+    onMouseOver = () => {
         this.handleControlsAutoHide();
     }
 
-    onMouseLeave() {
+    @action
+    onMouseLeave = () => {
         clearTimeout(this.autoHideControlsTimer);
         if (this.isPlaying) {
             this.showControls = false;
         }
     }
 }
-
-decorate(VideoPlayer, {
-    formattedDuration: computed,
-    videoEl: observable,
-    duration: observable,
-    currentTime: observable,
-    isFullscreen: observable,
-    ended: observable,
-    muted: observable,
-    volume: observable,
-    buffered: observable,
-    buffering: observable,
-    showControls: observable,
-    isPlaying: observable,
-    loadProgress: observable,
-    timeFormat: observable,
-    onClick: action.bound,
-    onDoubleClick: action.bound,
-    onMouseEnter: action.bound,
-    onMouseOver: action.bound,
-    onMouseLeave: action.bound,
-    onMouseMove: action.bound,
-    setMuted: action.bound,
-    setVolume: action.bound,
-    getVolume: action.bound,
-    skipTo: action.bound,
-    toggleFullscreen: action.bound
-});
 
 const VideoPlayerView = observer((props) => {
     const { onClick, onDoubleClick, videoEl, onMouseEnter, onMouseLeave, onMouseOver, onMouseMove, showControls, attachEvents, detachEvents } = useStore();
